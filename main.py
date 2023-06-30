@@ -40,7 +40,8 @@ class GameController:
             self.mouse_pos = pg.mouse.get_pos()
             print("Mouse pos", self.mouse_pos)
             for mine in self.mine_list:
-                mine.on_mouse(self.mouse_pos)
+                if mine.on_mouse(self.mouse_pos):
+                    print(mine)
 
             if event.type == pg.QUIT:
                 self.running = False
