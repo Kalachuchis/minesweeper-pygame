@@ -17,18 +17,21 @@ class MineBlock(Rect):
     def check(self, event: pg.event.Event, mouse_pos: Tuple):
         if self.on_mouse(mouse_pos):
             if event.type == pg.MOUSEBUTTONDOWN and not self.is_clicked:
-                self.inflate_ip(-3, -3)
+                self.inflate_ip(-4, -4)
                 self.is_clicked = True
             elif event.type == pg.MOUSEBUTTONUP and self.is_clicked:
-                print("check")
+                self.open()
 
         if event.type == pg.MOUSEBUTTONUP and self.is_clicked:
-            self.inflate_ip(3, 3)
-            self.is_clicked = False
-            print(mouse_in_self)
+            if(self.mouse_in_self):
+                self.inflate_ip(4, 4)
+            else:
+                self.inflate_ip(2,2)
 
-    def click(self):
-        print(self.mouse_in_self)
+            self.is_clicked = False
+
+    def open(self):
+        print(self.is_bomb)
 
     def on_mouse(self, mouse_pos: Tuple) -> bool:
         if self.collidepoint(mouse_pos) and not self.mouse_in_self:
