@@ -4,24 +4,40 @@ import pygame as pg
 from pygame import Rect
 
 
-class Mine(Rect):
-    def __init__(self, left, top, width, height, is_bomb):
+class MineBlock(Rect):
+    def __init__(self, left: int, top: int, width: int, height: int, is_bomb: bool):
         super().__init__(left, top, width, height)
         self.is_bomb = is_bomb
         self.mouse_in_self = False
+        self.is_clicked = False
 
     def draw(self, screen: pg.Surface):
         pg.draw.rect(screen, "red", self)
 
-    def clicked(self):
-        self.inflate_ip(-1.5, -1.5)
+    def check(self, event: pg.event.Event, mouse_pos: Tuple):
+        if self.on_mouse(mouse_pos):
+            if event.type == pg.MOUSEBUTTONDOWN and not self.is_clicked:
+                self.inflate_ip(-3, -3)
+                self.is_clicked = True
+            elif event.type == pg.MOUSEBUTTONUP and self.is_clicked:
+                print("check")
+
+        if event.type == pg.MOUSEBUTTONUP and self.is_clicked:
+            self.inflate_ip(3, 3)
+            self.is_clicked = False
+            print(mouse_in_self)
+
+    def click(self):
+        print(self.mouse_in_self)
 
     def on_mouse(self, mouse_pos: Tuple) -> bool:
         if self.collidepoint(mouse_pos) and not self.mouse_in_self:
-            self.inflate_ip(2, 2)
+            if not self.is_clicked:
+                self.inflate_ip(2, 2)
             self.mouse_in_self = True
         elif not self.collidepoint(mouse_pos) and self.mouse_in_self:
-            self.inflate_ip(-2, -2)
+            if not self.is_clicked:
+                self.inflate_ip(-2, -2)
             self.mouse_in_self = False
 
         return self.mouse_in_self
