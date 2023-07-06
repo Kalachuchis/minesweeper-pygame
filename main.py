@@ -2,12 +2,12 @@ from typing import Tuple
 
 import pygame as pg
 
-from minesweeper import MineBlock
+from minesweeper import MineBlock, MineField
 from minesweeper.utils import get_mine_positions
 
 SCREEN_SIZE = (720, 720)
+FIELD_SIZE = (10, 10)
 MINE_SIZE = (20, 20)
-MINE_DIMS = (10, 10)
 
 
 class GameController:
@@ -16,8 +16,9 @@ class GameController:
         self.clock = pg.time.Clock()
         self.running = True
         self.tick = 60
-        self.mine_list = []
-        self.mine_pos = get_mine_positions(MINE_DIMS, MINE_SIZE)
+        self.mine_field = MineField(MINE_SIZE, FIELD_SIZE, 10).generate_mine_field()
+        self.mine_list = self.mine_field.mine_list
+        self.mine_pos = get_mine_positions(FIELD_SIZE, MINE_SIZE)
 
     def event_loop(self):
         mine: MineBlock
@@ -33,10 +34,6 @@ class GameController:
                 self.running = False
 
     def main_loop(self):
-        mine_po: Tuple
-        for mine_po in self.mine_pos:
-            self.mine_list.append(MineBlock(mine_po[0], mine_po[1], *MINE_SIZE, True))
-
         while self.running:
             self.event_loop()
             self.screen.fill("blue")
@@ -54,3 +51,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+    # print(MineField(MINE_SIZE, FIELD_SIZE, 10).generate_mine_locations())
